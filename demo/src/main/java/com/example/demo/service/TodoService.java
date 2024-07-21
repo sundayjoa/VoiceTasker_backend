@@ -18,6 +18,7 @@ public class TodoService{
 	@Autowired
 	private TodoRepository repository;
 	
+	//리스트 생성
 	public List<TodoEntity> create(final TodoEntity entity){
 		
 		validate(entity);
@@ -46,6 +47,7 @@ public class TodoService{
 		return repository.findByUserId(userId);
 	}
 	
+	//리스트 수정
 	public List<TodoEntity> update(final TodoEntity entity){
 		validate(entity);
 		
@@ -57,6 +59,21 @@ public class TodoService{
 			
 			repository.save(todo);
 		});
+		
+		return retrieve(entity.getUserId());
+	}
+	
+	//리스트 삭제
+	public List<TodoEntity> delete(final TodoEntity entity){
+		validate(entity);
+		
+		try {
+			repository.delete(entity);
+		} catch(Exception e) {
+			log.error("error deleting entity", entity.getId(), e);
+			
+			throw new RuntimeException("error deleting entity "+ entity.getId());
+		}
 		
 		return retrieve(entity.getUserId());
 	}
